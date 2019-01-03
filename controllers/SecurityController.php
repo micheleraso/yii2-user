@@ -142,7 +142,7 @@ class SecurityController extends Controller
      *
      * @return string|Response
      */
-    public function actionLogin()
+    public function actionLogin($redirect = NULL)
     {
         if (!\Yii::$app->user->isGuest) {
             $this->goHome();
@@ -158,7 +158,7 @@ class SecurityController extends Controller
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             $this->trigger(self::EVENT_AFTER_LOGIN, $event);
-            return $this->goBack();
+            return empty($redirect) ? $this->goBack() : $this->redirect(urldecode($redirect));
         }
 
         return $this->render('login', [
